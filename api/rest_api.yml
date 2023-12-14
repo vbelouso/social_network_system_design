@@ -1,0 +1,700 @@
+openapi: 3.0.3
+info:
+  title: Fake VKontakte - OpenAPI 3.0
+  description: |-
+    - [The source repository](https://github.com/vbelouso/social_network_system_design)
+    - [The source API definition](https://github.com/vbelouso/social_network_system_design/main/api/rest_api.yml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: fake@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+tags:
+  - name: account
+  - name: friend
+  - name: feed
+  - name: chat
+  - name: conversation
+  - name: upload
+paths:
+  /api/v1/accounts/{account_id}:
+    get:
+      tags:
+        - account
+      summary: Find account by ID
+      description: Returns a single account
+      operationId: getAccountById
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/friends:
+    get:
+      tags:
+        - friend
+      summary: Return the list of friends for an account
+      operationId: listFriends
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/page_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountList'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - friend
+      summary: Add a new friend for an account
+      operationId: addFriend
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      requestBody:
+        $ref: '#/components/requestBodies/FriendRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - friend
+      summary: Remove friend from account
+      operationId: deleteFriend
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/friend_id'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/feed/posts:
+    get:
+      tags:
+        - feed
+      summary: Return an account feed posts
+      operationId: getAccountFeed
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/page_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feed'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - feed
+      summary: Add a post for an account
+      operationId: addPost
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      requestBody:
+        $ref: '#/components/requestBodies/PostRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Malformed post content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/feed/posts/{post_id}/upload:
+    post:
+      tags:
+        - feed
+      summary: Upload media to a specific post
+      operationId: uploadMediaToPost
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - name: post_id
+          in: path
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                media:
+                  type: string
+                  format: binary
+                  description: Media file to upload
+      responses:
+        '200':
+          description: Media uploaded successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account or post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/chats:
+    get:
+      tags:
+        - chat
+      summary: Return the list of chats for an account
+      operationId: listAccountChats
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/page_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatList'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/chats/{chat_id}:
+    post:
+      tags:
+        - chat
+      summary: Add a message for a specific chat
+      operationId: addChatMessage
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/chat_id'
+      requestBody:
+        $ref: '#/components/requestBodies/MessageRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Malformed message content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/chats/messages:
+    get:
+      tags:
+        - chat
+      summary: Return the list of messages for a specific chat
+      operationId: getAccountChatMessages
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - name: chat_id
+          in: query
+          description: ID of chat
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/page_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/conversations:
+    get:
+      tags:
+        - conversation
+      summary: Return the list of conversations for an account
+      operationId: listAccountConversations
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/page_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationList'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - conversation
+      summary: Add a message for a specific conversation
+      operationId: addConversationMessage
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - name: conversation_id
+          in: query
+          description: ID of conversation
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/MessageRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Malformed message content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/accounts/{account_id}/conversations/messages:
+    get:
+      tags:
+        - conversation
+      summary: Return the list of messages for a specific conversation
+      operationId: getAccountConversationMessages
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - name: conversation_id
+          in: query
+          description: ID of conversation
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/page_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/uploads:
+    post:
+      tags:
+        - upload
+      summary: Upload a file to a chat or conversation
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                media:
+                  type: string
+                  format: binary
+                  description: Media file to upload
+                destination:
+                  type: string
+                  enum: [chat, conversation, post]
+                  description: >
+                    Specifies the type of destination where the file will be uploaded. 
+                    - 'chat': Indicates that the file is associated with a specific chat.
+                    - 'conversation': Indicates that the file is associated with a specific conversation.
+                    - 'post': Indicates that the file is to be attached to a specific post.
+                destination_id:
+                  type: string
+                  description: >
+                    The unique identifier of the destination (chat, conversation, or post) to which the file is being uploaded. This ID should already exist in the system.
+      responses:
+        '201':
+          description: File uploaded successfully
+        '400':
+          description: Invalid request
+        '413':
+          description: File too large
+        '415':
+          description: Unsupported media type
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  parameters:
+    account_id:
+      name: account_id
+      in: path
+      description: Account ID
+      required: true
+      schema:
+        type: string
+    friend_id:
+      name: friend_id
+      in: query
+      description: ID of friend
+      schema:
+        type: string
+    chat_id:
+      name: chat_id
+      in: path
+      required: true
+      description: ID of chat
+      schema:
+        type: string
+    page_token:
+      name: page_token
+      in: query
+      description: Index of the requested page, where one corresponds to the first page.
+      schema:
+        type: integer
+    page_size:
+      name: page_size 
+      in: query
+      description: Maximum number of items that will be contained in the returned page
+      schema:
+        type: integer
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          example: user123
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        age:
+          type: integer
+          example: 35
+        email:
+          type: string
+          example: john@email.com
+        status:
+          type: string
+          description: account status
+          enum:
+            - online
+            - offline
+    AccountList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+    Feed:
+      type: object
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "0123456789"
+        author:
+          type: string
+          example: "user123"
+        content:
+          type: string
+          example: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        timestamp:
+           type: string
+           format: date-time
+    Chat:
+      type: object
+      properties:
+        id:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    ChatList:
+      type: object
+      properties:
+        chats:
+          type: array
+          items:
+            type: string
+            example: "123456"
+          description: List of chat IDs
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    ConversationList:
+      type: object
+      properties:
+        conversations:
+          type: array
+          items:
+            type: string
+            example: "123456"
+          description: List of conversations IDs
+    Message:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "What's up, my dear friend?"
+        timestamp:
+           type: string
+           format: date-time
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: string
+      required:
+        - code
+        - message
+  requestBodies:
+    FriendRequest:
+      description: Account ID for adding as a friend
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              friend_id:
+                type: string
+                example: user456
+    PostRequest:
+      description: Post content that needs to be published
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                example: "I'm not lazy. I'm just very relaxed"
+    MessageRequest:
+      description: Dialogues/chats message content
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                example: "I'm not lazy. I'm just very relaxed"
