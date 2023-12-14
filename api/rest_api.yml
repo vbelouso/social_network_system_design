@@ -37,8 +37,18 @@ paths:
                 $ref: '#/components/schemas/Account'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
           content:
             application/json:
               schema:
@@ -62,8 +72,22 @@ paths:
                 $ref: '#/components/schemas/AccountList'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - friend
@@ -78,8 +102,22 @@ paths:
           description: Success
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - friend
@@ -93,8 +131,22 @@ paths:
           description: Success
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/feed/posts:
     get:
       tags:
@@ -114,8 +166,22 @@ paths:
                 $ref: '#/components/schemas/Feed'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - feed
@@ -130,8 +196,22 @@ paths:
           description: Success
         '400':
           description: Malformed post content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/feed/posts/{post_id}/upload:
     post:
       tags:
@@ -162,8 +242,22 @@ paths:
           description: Media uploaded successfully
         '400':
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account or post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/chats:
     get:
       tags:
@@ -183,8 +277,22 @@ paths:
                 $ref: '#/components/schemas/ChatList'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/chats/{chat_id}:
     post:
       tags:
@@ -201,8 +309,22 @@ paths:
           description: Success
         '400':
           description: Malformed message content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
-          description: Account not found
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/chats/messages:
     get:
       tags:
@@ -228,8 +350,22 @@ paths:
                 $ref: '#/components/schemas/Chat'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/conversations:
     get:
       tags:
@@ -249,8 +385,22 @@ paths:
                 $ref: '#/components/schemas/ConversationList'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - conversation
@@ -270,9 +420,23 @@ paths:
         '200':
           description: Success
         '400':
-          description: Malformed post content
+          description: Malformed message content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/accounts/{account_id}/conversations/messages:
     get:
       tags:
@@ -298,8 +462,22 @@ paths:
                 $ref: '#/components/schemas/Conversation'
         '400':
           description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/uploads:
     post:
       tags:
@@ -326,9 +504,9 @@ paths:
                     - 'conversation': Indicates that the file is associated with a specific conversation.
                     - 'post': Indicates that the file is to be attached to a specific post.
                 destination_id:
-                    type: string
-                                      The unique identifier of the destination (chat, conversation, or post) to which the file is being uploaded. This ID should already exist in the system.
-
+                  type: string
+                  description: >
+                    The unique identifier of the destination (chat, conversation, or post) to which the file is being uploaded. This ID should already exist in the system.
       responses:
         '201':
           description: File uploaded successfully
@@ -338,6 +516,12 @@ paths:
           description: File too large
         '415':
           description: Unsupported media type
+        '500':
+          description: Unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   parameters:
     account_id:
